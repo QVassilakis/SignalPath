@@ -35,9 +35,8 @@ if not st.session_state.authenticated:
 # ── Database ──────────────────────────────────────────────────────────────────
 @st.cache_resource
 def get_engine():
-    db = st.secrets["postgres"]
-    password = quote_plus(db["password"])
-    url = f"postgresql://{db['user']}:{password}@{db['host']}:5432/postgres"
+    password = quote_plus(st.secrets["DBPASS"])
+    url = f"postgresql://{st.secrets['DBUSER']}:{password}@{st.secrets['DBHOST']}:{st.secrets['DBPORT']}/{st.secrets['DBNAME']}"
     return create_engine(url)
 
 @st.cache_data(ttl=3600)
