@@ -21,11 +21,11 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    st.markdown("### 🔭 SkillLens")
+    st.markdown("### 🔭 SignalPath")
     st.markdown("Job Market Intelligence for Career Coaches")
     pwd = st.text_input("Access code", type="password")
     if st.button("Enter"):
-        if pwd == pwd.secrets.get("APP_PASSWORD", "signalpath2026"):
+        if pwd == st.secrets.get("APP_PASSWORD", "signalpath2026"):
             st.session_state.authenticated = True
             st.rerun()
         else:
