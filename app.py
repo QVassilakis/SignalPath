@@ -7,12 +7,10 @@ from urllib.parse import quote_plus
 import json
 from collections import Counter
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
 
 st.set_page_config(
-    page_title="SkillLens | Job Market Intelligence",
+    page_title="SignalPath | Job Market Intelligence",
     page_icon="🔭",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -27,7 +25,7 @@ if not st.session_state.authenticated:
     st.markdown("Job Market Intelligence for Career Coaches")
     pwd = st.text_input("Access code", type="password")
     if st.button("Enter"):
-        if pwd == os.getenv("APP_PASSWORD", "skilllens2024"):
+        if pwd == pwd.secrets.get("APP_PASSWORD", "signalpath2026"):
             st.session_state.authenticated = True
             st.rerun()
         else:
@@ -37,8 +35,9 @@ if not st.session_state.authenticated:
 # ── Database ──────────────────────────────────────────────────────────────────
 @st.cache_resource
 def get_engine():
-    password = quote_plus(os.getenv("DBPASS", ""))
-    url = f"postgresql://{os.getenv('DBUSER')}:{password}@{os.getenv('DBHOST')}:5432/postgres"
+    db = st.secrets["postgres"]
+    password = quote_plus(db["password"])
+    url = f"postgresql://{db['user']}:{password}@{db['host']}:5432/postgres"
     return create_engine(url)
 
 @st.cache_data(ttl=3600)
