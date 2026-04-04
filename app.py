@@ -36,8 +36,11 @@ if not st.session_state.authenticated:
 @st.cache_resource
 def get_engine():
     password = quote_plus(st.secrets["DBPASS"])
-    url = f"postgresql://{st.secrets['DBUSER']}:{password}@{st.secrets['DBHOST']}:{st.secrets['DBPORT']}/{st.secrets['DBNAME']}"
-    return create_engine(url)
+    url = (
+        f"postgresql://{st.secrets['DBUSER']}:{password}"
+        f"@{st.secrets['DBHOST']}:{st.secrets['DBPORT']}"
+        f"/{st.secrets['DBNAME']}?sslmode=require")
+    return create_engine(url, pool_pre_ping=True)
 
 @st.cache_data(ttl=3600)
 def load_jobs(roles=None, locations=None, days_back=90):
